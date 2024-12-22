@@ -1,7 +1,7 @@
 % Objetivo 1
 function data = read_data(file)
     try
-        temp = xlsread(file);                                   % ler
+        temp = csvread(file, 1, 0);                             % ler, linha 2, col 1
     catch ERR
         error('Erro a abrir o ficheiro: %s', ERR.message);      % erro
     end
@@ -16,7 +16,7 @@ function data = read_data(file)
     end
 end
 
-y = read_data("dadosTP2/dados.csv");
+y = read_data("./data/dados.csv");
 
 % Objetivo 2
 function show_data(patient_id, patients_array)
@@ -28,7 +28,7 @@ function show_data(patient_id, patients_array)
             return
         end
 
-        file_name = sprintf("dadosTP2/dados/%d.mat", patient_id);
+        file_name = sprintf("./data/dados/%d.mat", patient_id);
         mat_file = load(file_name);                              
         node_seg = mat_file.mask;
 
@@ -36,6 +36,10 @@ function show_data(patient_id, patients_array)
         img(:,:,1) = node_seg;
         img(:,:,2) = 0.5 * node_seg;
         img(:,:,3) = 0 * node_seg;
+
+        ct_img(:,:,1) = mat_file.ct;
+        ct_img(:,:,2) = mat_file.ct;
+        ct_img(:,:,3) = mat_file.ct;
 
         for cx=-2:2                                         % (x-cx)^2 + (y-cy)^2 = r^2
             for cy=-2:2
@@ -47,10 +51,13 @@ function show_data(patient_id, patients_array)
             end
         end
 
-        end_res = img & mat_file.ct;
-        imshow(end_res);
+        %end_res = img & mat_file.ct;
+        %imshow(img & ct_img);
         
-        imshow(img);
+        size(img)
+        size(ct_img)
+
+        %imshow(img);
     catch ERR
         error('Erro a mostrar a CT do paciente: %s', ERR.message);      % erro
     end
@@ -59,10 +66,10 @@ end
 show_data(15, y);
 
 % Objetivo 3
-function area, perimetro = calc_nod_geom(img_ct, node_seg)
-    try
-        
-    catch ERR
-        error('Erro a calcular área e perímetro: %s', ERR.message);      % erro
-    end
-end
+%function area, perimetro = calc_nod_geom(img_ct, node_seg)
+%    try
+%        
+%    catch ERR
+%        error('Erro a calcular área e perímetro: %s', ERR.message);      % erro
+%    end
+%end
